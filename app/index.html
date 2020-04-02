@@ -1,0 +1,138 @@
+<!doctype html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Web Chroma Key Tester</title>
+        <meta name="description" content="Test the Web Chroma Key library">
+        <meta name="author" content="1076">
+
+        <link rel="stylesheet" href="styles/index.css">
+
+    </head>
+
+    <body>
+        <!-- <div class="debugging">
+            <media-color-sampler sourcequery=".test-media"></media-color-sampler>
+            <video src="./assets/videos/chicken.mp4" class="test-media" width="480"></video>
+            <img src="./assets/images/test.jpg" class="test-media-2" width="480"></img>
+        </div> -->
+        <header>
+            <h1>Real Time Chroma Key with WebAssembly</h1>
+            <p>This proof-of-concept library replaces a key color in input media (image or video) with pixels from a replacement media (image or video).</p>
+        </header>
+        <div class="setup">
+            <header>
+                <h2>Setup</h2>
+                <p>Select an input image or video, a replacement image or video, and a key color (the color to be replaced), or use the provided defaults.</p>
+            </header>
+            <div class="input">
+                <div class="title">Input Media</div>
+                <local-media-selector eyedropper="true" default=""></local-media-selector>
+            </div>
+            <div class="replacement">
+                <div class="title">Replacement Media</div>
+                <local-media-selector default=""></local-media-selector>
+            </div>
+        </div>
+        <div class="config">
+            <header>
+                <h2>Configuration</h2>
+                <p>Configure the type of chroma key functionality you want to test.</p>
+            </header>
+            <div class="options">
+                <div class="description">
+                    <p>There are multiple types of algorithms implemented in the web-chroma-key library which each perform chroma key in a slightly different way. Select a functionality type, below, and adjust then its configuration options.</p>
+                </div>
+                <ul class="menu">
+                    <li class="menu-item basic-mat"><span class="title">Basic Matting</span></li>
+                    <li class="menu-item hsl"><span class="title">HSL</span></li>
+                </ul>
+            </div>
+            <ul class="pages">
+                <li class="page basic-mat">
+                    <header>
+                        <h3>Tolerances</h3>
+                        <p>The "Basic Matting" algorithm breaks an image into three fields: pixels that don't match the key, pixels that almost match the key, and pixels that closely (or exactly) match the key. Anything that is less than the close tolerance to the key will not be keyed out. Anything that is between the close and far tolerances will be blended with a "multiply" filter. Anything that is greater than the far tolerance will be completely keyed out.</p>
+                    </header>
+                    <label class="field tolerance-close">
+                        <span class="title">Close:</span>
+                        <span class="content">
+                            <input class="value" type="range" min="0" max="100" step=".1" value="0" data-property="tolerance_close" />
+                            <input class="display" type="number" value="0" />
+                        </span>
+                    </label>
+                    <label class="field tolerance-far">
+                        <span class="title">Far:</span>
+                        <span class="content">
+                            <input class="value" type="range" min="0" max="100" step=".1" value="0" data-property="tolerance_far" />
+                            <input class="display" type="number" value="0" />
+                        </span>
+                    </label>
+                </li>
+                <li class="page hsl">
+                    <header>
+                        <h3>Thresholds</h3>
+                        <p>The HSL algorithm uses thresholds of difference for each property: the "<strong>H</strong>ue", the "<strong>S</strong>aturation", and the "<strong>L</strong>uminosity" (somtimes called "Value" in "HSV" nomenclature). The Hue is a degree on the color wheel (between 1 and 360), while the Saturation and Luminosity are simple values between 0 and 1. Whatever value is specified by the sliders, below, will act as a threshold of difference both less than and greater than the key's value. So if a key had a hue of "90" and you set the threshold to "5", the alrgorithm would match any color that is between the hues "85" and "95". Any colors that are selected by the algorithm will be keyed out.</p>
+                    </header>
+                    <label class="field hue">
+                        <span class="title">Hue:</span>
+                        <span class="content">
+                            <input class="value" type="range" min="0" max="360" step=".1" value="0" data-property="threshold_hue" />
+                            <input class="display" type="number" value="0" />
+                        </span>
+                    </label>
+                    <label class="field saturation">
+                        <span class="title">Saturation:</span>
+                        <span class="content">
+                            <input class="value" type="range" min="0" max="1" step=".01" value="0" data-property="threshold_saturation" />
+                            <input class="display" type="number" value="0" />
+                        </span>
+                    </label>
+                    <label class="field luminosity">
+                        <span class="title">Luminosity:</span>
+                        <span class="content">
+                            <input class="value" type="range" min="0" max="1" step=".01" value="0" data-property="threshold_luminosity" />
+                            <input class="display" type="number" value="0" />
+                        </span>
+                    </label>
+                </li>
+            </ul>
+        </div>
+        <div class="display">
+            <canvas></canvas>
+            <ul class="video-controls">
+                <li class="control webcam" data-action="start-capture">Start Capture</li>
+                <li class="control webcam" data-action="end-capture">End Capture</li>
+                <li class="control" data-action="play">Play</li>
+                <li class="control" data-action="pause">Pause</li>
+                <li class="control" data-action="reset">Reset</li>
+                <li class="control image" data-action="single">Merge</li>
+            </ul>
+        </div>
+        <script defer type="module">
+            import TesterApp from './scripts/tester-app.js';
+
+            window.rust_log_message = function (message)
+            {
+                console.log(message);
+            }
+
+            window.App = new TesterApp();
+            window.App.init();
+
+            // window.sendMessage = (message) =>
+            // {
+            //     console.log(message);
+            // }
+
+            window.logResult = function(event)
+            {
+                console.log(event);
+            }
+        </script>
+    </body>
+</html>
