@@ -15,11 +15,6 @@
     </head>
 
     <body>
-        <!-- <div class="debugging">
-            <media-color-sampler sourcequery=".test-media"></media-color-sampler>
-            <video src="./assets/videos/chicken.mp4" class="test-media" width="480"></video>
-            <img src="./assets/images/test.jpg" class="test-media-2" width="480"></img>
-        </div> -->
         <header>
             <h1>Real Time Chroma Key with WebAssembly</h1>
             <p>This proof-of-concept library replaces a key color in input media (image or video) with pixels from a replacement media (image or video).</p>
@@ -31,11 +26,11 @@
             </header>
             <div class="input">
                 <div class="title">Input Media</div>
-                <local-media-selector eyedropper="true" default=""></local-media-selector>
+                <local-media-selector eyedropper="true" default="./assets/images/test.jpg"></local-media-selector>
             </div>
             <div class="replacement">
                 <div class="title">Replacement Media</div>
-                <local-media-selector default=""></local-media-selector>
+                <local-media-selector default="./assets/images/test.jpg"></local-media-selector>
             </div>
         </div>
         <div class="config">
@@ -45,7 +40,7 @@
             </header>
             <div class="options">
                 <div class="description">
-                    <p>There are multiple types of algorithms implemented in the web-chroma-key library which each perform chroma key in a slightly different way. Select a functionality type, below, and adjust then its configuration options.</p>
+                    <p>There are multiple types of algorithms implemented in the web-chroma-key library which each perform chroma key in a slightly different way. Select a functionality type, below, and adjust then its configuration options. These values can be updated in real-time while a media item is being chroma keyed.</p>
                 </div>
                 <ul class="menu">
                     <li class="menu-item basic-mat"><span class="title">Basic Matting</span></li>
@@ -61,15 +56,13 @@
                     <label class="field tolerance-close">
                         <span class="title">Close:</span>
                         <span class="content">
-                            <input class="value" type="range" min="0" max="100" step=".1" value="0" data-property="tolerance_close" />
-                            <input class="display" type="number" value="0" />
+                            <range-value min="0" max="100" step=".1" value="0" data-property="tolerance_close"></range-value>
                         </span>
                     </label>
                     <label class="field tolerance-far">
                         <span class="title">Far:</span>
                         <span class="content">
-                            <input class="value" type="range" min="0" max="100" step=".1" value="0" data-property="tolerance_far" />
-                            <input class="display" type="number" value="0" />
+                            <range-value min="0" max="100" step=".1" value="0" data-property="tolerance_far"></range-value>
                         </span>
                     </label>
                 </li>
@@ -81,22 +74,19 @@
                     <label class="field hue">
                         <span class="title">Hue:</span>
                         <span class="content">
-                            <input class="value" type="range" min="0" max="360" step=".1" value="0" data-property="threshold_hue" />
-                            <input class="display" type="number" value="0" />
+                            <range-value min="0" max="360" step=".1" value="0" data-property="threshold_hue"></range-value>
                         </span>
                     </label>
                     <label class="field saturation">
                         <span class="title">Saturation:</span>
                         <span class="content">
-                            <input class="value" type="range" min="0" max="1" step=".01" value="0" data-property="threshold_saturation" />
-                            <input class="display" type="number" value="0" />
+                            <range-value min="0" max="1" step=".01" value="0" data-property="threshold_saturation"></range-value>
                         </span>
                     </label>
                     <label class="field luminosity">
                         <span class="title">Luminosity:</span>
                         <span class="content">
-                            <input class="value" type="range" min="0" max="1" step=".01" value="0" data-property="threshold_luminosity" />
-                            <input class="display" type="number" value="0" />
+                            <range-value min="0" max="1" step=".01" value="0" data-property="threshold_luminosity"></range-value>
                         </span>
                     </label>
                 </li>
@@ -123,16 +113,6 @@
 
             window.App = new TesterApp();
             window.App.init();
-
-            // window.sendMessage = (message) =>
-            // {
-            //     console.log(message);
-            // }
-
-            window.logResult = function(event)
-            {
-                console.log(event);
-            }
         </script>
     </body>
 </html>

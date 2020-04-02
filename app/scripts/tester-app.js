@@ -1,4 +1,5 @@
-import LocalMediaSelector from "../assets/libs/local-media-selector/local-media-selector.js";
+import LocalMediaSelector from "../assets/libs/local-media-selector/local-media-selector.dep.js";
+import RangeValue from '../assets/libs/range-value/range-value.dep.js';
 
 export default class TesterApp
 {
@@ -16,6 +17,7 @@ export default class TesterApp
     _registerWebComponents()
     {
         LocalMediaSelector.register();
+        RangeValue.register();
     }
     _getStaticElements()
     {

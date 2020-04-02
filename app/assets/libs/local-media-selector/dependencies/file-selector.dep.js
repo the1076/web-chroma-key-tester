@@ -259,9 +259,14 @@ export default class FileSelector extends HTMLElement
     }
     _clearButton_OnClick(event)
     {
+        this.clearSelection();
+    }
+
+    //functionality
+    clearSelection()
+    {
         this.$input.value = null;
         this.$preview.src = "";
-
         this.__classOverrride_dispatchEvent(this, 'previewclear');
     }
 }

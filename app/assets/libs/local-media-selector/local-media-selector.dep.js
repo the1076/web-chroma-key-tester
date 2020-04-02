@@ -94,6 +94,7 @@ export default class LocalMediaSelector extends HTMLElement
         this.eyedropper = (this.getAttribute('eyedropper') == 'true') ? true : false;
         this.useDefault = (this.getAttribute('usedefault') == 'true') ? true : false;
         this.default = this.getAttribute('default');
+        this.defaultColor = this.getAttribute('defaultcolor') || '#FFFFFF';
 
         this.innerHTML = `<div class="default">
                 <label class="field-group">
@@ -130,12 +131,8 @@ export default class LocalMediaSelector extends HTMLElement
             this.$colorSampler = document.querySelector('media-color-sampler');
         }
 
-        if(this.useDefault)
-        {
-            this.classList.add('use-default');
-            this.$defaultMedia.src = this.default;
-        }
-
+        
+        this.setDefaultUse(this.useDefault);
         let mediaType = this.getAttribute('mediatype');
         if(mediaType != null)
         {
@@ -144,11 +141,13 @@ export default class LocalMediaSelector extends HTMLElement
     }
     _addEventListeners()
     {
+        this.$useDefault.addEventListener('change', this._useDefault_onChange.bind(this));
         this.$imageButton.addEventListener('click', this._typeButton_onClick.bind(this));
         this.$videoButton.addEventListener('click', this._typeButton_onClick.bind(this));
         this.$webcamButton.addEventListener('click', this._typeButton_onClick.bind(this));
 
         this.$fileSelector.addEventListener('previewload', this._fileSelector_OnPreviewLoad.bind(this));
+        this.$fileSelector.addEventListener('previewclear', this._fileSelector_OnPreviewClear.bind(this));
 
         if(this.$colorSampler)
         {
@@ -157,6 +156,12 @@ export default class LocalMediaSelector extends HTMLElement
     }
 
     // handlers
+    _useDefault_onChange(event)
+    {
+        this.useDefault = this.$useDefault.checked;
+        this.setDefaultUse(this.useDefault);
+    }
+
     _typeButton_onClick(event)
     {
         this.setMediaType(event.currentTarget.dataset.type);
@@ -180,12 +185,16 @@ export default class LocalMediaSelector extends HTMLElement
 
         this.__classOverrride_dispatchEvent(this, 'sourcechange', { value: this.value, $value: this.$value });
     }
+    _fileSelector_OnPreviewClear(event)
+    {
+        // TOOD: clear the color sampler's value and preview image;
+    }
 
     // functionality
     setMediaType(mediaType)
     {
-        // TODO: Clear selected value
-        
+        this.$fileSelector.clearSelection();
+
         this.mediaType = mediaType;
         if(this.mediaType == 'webcam')
         {
@@ -198,6 +207,33 @@ export default class LocalMediaSelector extends HTMLElement
             this.$fileSelector.setAttribute('icon', typeMap[mediaType].icon);
             this.$fileSelector.setAttribute('browsetext', typeMap[mediaType].browsetext);
             this.$fileSelector.setAttribute('cleartext', typeMap[mediaType].cleartext);
+        }
+    }
+
+    setDefaultUse(useDefault)
+    {
+        if(useDefault)
+        {
+            this.classList.add('default');
+            this.$defaultMedia.src = this.default;
+            this.value = this.default;
+            this.$value = this.$defaultMedia;
+            
+            if(this.eyedropper)
+            {
+                this.$colorSampler.setColor(this.defaultColor);
+            }
+        }
+        else
+        {
+            this.classList.remove('default');
+            if(this.mediaType != null && this.mediaType.trim() != '')
+            {
+                let parentObject = (this.mediaType == 'webcam') ? this : this.$fileSelector;
+                this.$value = parentObject[typeMap[this.mediaType].target];
+            }
+            this.value = this.default;
+            this.$defaultMedia.src = null;
         }
     }
 }
