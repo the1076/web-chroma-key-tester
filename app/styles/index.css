@@ -1,0 +1,448 @@
+/* ==========================================================================
+   Imports
+   ========================================================================== */
+   
+
+/*Standardized elements*/
+html
+{
+    box-sizing: border-box;
+    font-size: 14px;
+}
+*, *:before, *:after
+{
+    box-sizing: inherit;
+}
+body
+{
+    font-size: calc(1rem + .2vw);
+}
+body, h1, h2, h3, h4, h5, h6, p, ul
+{
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+}
+ul
+{
+    list-style: none;
+}
+
+img
+{
+max-width: 100%;
+height: auto;
+}
+
+::-webkit-details-marker { display:none; }
+
+/* Main Styling */
+:root
+{
+    --blue: #2a8ef0;
+    --red: #f9283d;
+    --green: #6ABA3F;
+    --yellow: #F0D841;
+    --gray: #ebe9ee;
+    --black: #2c333b;
+
+    --font-color: #dfdfdf;
+    --unfocused: #a9a9b3;
+}
+
+h1, h2, h3, h4, h5, h6
+{
+    color: #fff;
+}
+button, input
+{
+    font-family: inherit;
+    color: inherit;
+}
+a
+{
+    color: var(--blue);
+}
+
+body
+{
+    background:  radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,.6) 100%), linear-gradient(15deg, #56ab2f, #a8e063);;
+    font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+body:before
+{
+    content: '';
+    left: 0;
+    position: absolute;
+    z-index: 1;
+    width: 200%;
+    height: 100vh;
+    background: repeating-linear-gradient(45deg, transparent, transparent 1px, rgba(0, 0, 0, 0.05) 1px, rgba(255, 255, 255, 0.025) 10px);
+}
+body:after
+{
+    content: '';
+    position: absolute;
+    z-index: 1;
+    width: 200%;
+    height: 100vh;
+    right: 0;
+    background: repeating-linear-gradient(-45deg, transparent, transparent 1px, rgba(0, 0, 0, 0.05) 1px, rgba(255, 255, 255, 0.025) 10px);
+}
+
+body > .content
+{
+    overflow: auto;
+    width: 100%;
+    z-index: 5;
+}
+
+.app
+{
+    max-width: 960px;
+    margin: 2em auto;
+    background-color: #3e4652;
+    box-shadow: 0 0 15px 5px rgba(0,0,0,.2);
+    color: var(--font-color);
+}
+
+.app > header
+{
+    background-color: #2f333a;
+    padding: 1em;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    /* media query */
+    /* justify-content: center; */
+}
+
+.app > header .image-container
+{
+    background-image: radial-gradient( circle 329px at 3.1% 9.3%,  rgba(251,204,235,1) 28.1%, rgba(221,221,221,0.15) 100.7% );
+    border: solid 3px #fff;
+    border-radius: 3px;
+    margin-right: 1em;
+    padding: .5em;
+    box-shadow: 0 0 5px 1px rgba(0,0,0,.1);
+
+    /* media query */
+    /* margin-bottom: 1em */
+}
+
+.app > header .image
+{
+    width: 180px;
+    height: auto;
+    box-shadow: 0 0 5px -1px rgba(0,0,0,.3);
+}
+
+.app > header h1
+{
+    color: var(--blue);
+}
+
+.app p
+{
+    max-width: 680px;
+}
+
+.app > * > header
+{
+    padding: .5em 1em;
+}
+.app > * > header p
+{
+    font-size: .8em;
+}
+
+.app summary
+{
+    font-size: inherit;
+    color: var(--blue);
+    margin-top: .5em;
+}
+
+.app details
+{
+    font-size: 1rem;
+}
+
+.app .source-selector
+{
+    padding: .5em 1em;
+}
+
+.app .source-selector .title .use-default
+{
+    font-size: .8em;
+    display: inline-flex;
+    align-items: center;
+    margin-left: 1em;
+}
+
+.app .source-selector .title
+{
+    margin-bottom: .5em;
+}
+
+local-media-selector
+{
+    display: block;
+    max-width: 600px;
+    
+    padding: .5em;
+    margin: .5em 0;
+    border: solid 1px #2f333a;
+    border-radius: 3px;
+}
+
+local-media-selector .types
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1em;
+}
+
+local-media-selector .types .type
+{
+    background-color: #535f6f;
+    border-radius: 3px;
+    padding: .3em 1.5em;
+    margin-right: 1em;
+    border: solid 1px var(--unfocused);
+    cursor: pointer;
+}
+local-media-selector .types .type.selected
+{
+    background-color: var(--blue);
+    color: #fff;
+    border-color:transparent;
+}
+
+local-media-selector .content
+{
+    display: flex;
+}
+
+local-media-selector file-selector
+{
+    flex: 1;
+    display: flex;
+    margin-right: 1em;
+}
+
+local-media-selector file-selector > label
+{
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+local-media-selector file-selector .browse
+{
+    flex: 1;
+    background-color: #535f6f;
+    padding: .3em 1em;
+    position: relative;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: solid 1px var(--unfocused);
+}
+
+local-media-selector file-selector .browse .icon
+{
+    margin-right: 1em;
+}
+
+local-media-selector file-selector .browse .icon .main
+{
+    fill: var(--font-color);
+}
+
+local-media-selector file-selector .clear
+{
+    background-color:#535f6f;
+    color: var(--font-color);
+    border: solid 1px var(--unfocused);
+    border-radius: 3px;
+}
+
+local-media-selector .webcam-permission
+{
+    flex-direction: column;
+}
+
+local-media-selector .webcam-permission p
+{
+    margin-bottom: .5em;
+}
+
+local-media-selector .webcam-permission .request
+{
+    background-color:#535f6f;
+    color: var(--font-color);
+    border: solid 1px var(--unfocused);
+    border-radius: 3px;
+    font-size: 1.1rem;
+    padding: .5em 1em;
+}
+local-media-selector .webcam-permission .request:active
+{
+    background-color: var(--blue);
+    color: #fff;
+    border-color:transparent;
+}
+
+.app > .display .merged
+{
+    width: calc(100% - 2em);
+    height: auto;
+    border: solid 1px var(--unfocused);
+    margin: 1em;
+    background-color: #000;
+}
+
+.app > .display .video-controls
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 1em;
+}
+
+.app > .display .video-controls .control
+{
+    display: none;
+    background-color: #535f6f;
+    border-radius: 3px;
+    padding: .3em 1.5em;
+    margin-right: 1em;
+    border: solid 1px var(--unfocused);
+    cursor: pointer;
+}
+.app > .display .video-controls .control:last-of-type
+{
+    margin-right: 0;
+}
+.app > .display .video-controls .control:active
+{
+    background-color: var(--blue);
+    color: #fff;
+    border-color:transparent;
+}
+.app > .display .video-controls.image .control.image
+,.app > .display .video-controls.video .control.video
+,.app > .display .video-controls.webcam .control.webcam
+{
+    display: block;
+}
+
+.app > .config .options .menu
+{
+    display: flex;
+    align-items: center;
+    margin: 1em;
+}
+
+.app > .config .options .menu .menu-item
+{
+    background-color: #535f6f;
+    border-radius: 3px;
+    padding: .3em 1.5em;
+    margin-right: 1em;
+    border: solid 1px var(--unfocused);
+    cursor: pointer;
+}
+.app > .config[data-page="basic-mat"] .options .menu .menu-item[data-page="basic-mat"]
+,.app > .config[data-page="hsl"] .options .menu .menu-item[data-page="hsl"]
+{
+    background-color: var(--blue);
+    color: #fff;
+    border-color:transparent;
+}
+
+.app > .config .pages .page
+{
+    display: none;
+    padding: 1em;
+}
+.app > .config[data-page="basic-mat"] .pages .page.basic-mat
+,.app > .config[data-page="hsl"] .pages .page.hsl
+{
+    display: block;
+}
+
+.app > .config .pages .page .fields
+{
+    margin-top: 1em;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.app > .config .pages .page .fields .field
+{
+    margin-right: 1em;
+    border-radius: 3px;
+    padding: .5em 1em;
+    border: solid 1px #2f333a;
+}
+.app > .config .pages .page .fields .field:last-of-type
+{
+    margin-right: 0;
+}
+
+.app > .config .pages .page .fields .field .title
+{
+    margin-bottom: 1em;
+    display: block;
+    color: #fff;
+}
+
+range-value
+{
+    display:flex;
+    align-items: flex-start;
+}
+
+range-value input[type="range"]
+{
+    writing-mode: bt-lr;
+    -webkit-appearance: slider-vertical;
+    width: 40px;
+}
+
+range-value input[type="number"]
+{
+    font-size: 1.5rem;
+    background-color: #535f6f;
+    border: solid 1px var(--unfocused);
+    border-radius: 3px;
+    padding: .2em .5em;
+    color: #fff;
+    width: 100px;
+}
+
+.app > footer
+{
+    margin-top: 2em;
+    background-color: #2f333a;
+    padding: 1em;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    /* media query */
+    /* justify-content: center; */
+}

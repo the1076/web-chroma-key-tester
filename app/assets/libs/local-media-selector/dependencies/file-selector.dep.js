@@ -144,8 +144,10 @@ export default class FileSelector extends HTMLElement
     {
         let indexStyle = document.styleSheets[0];
         indexStyle.insertRule(`file-selector .value { display: none; }`);
+        indexStyle.insertRule(`file-selector .preview[src=""] { display: none; }`);
         indexStyle.insertRule(`file-selector .preview[src=""] ~ .clear { display: none; }`);
         indexStyle.insertRule(`file-selector .preview:not([src=""]) ~ .browse { display: none; }`);
+        indexStyle.insertRule(`file-selector .clear { font-size: 2rem; margin-left: 10px; line-height:1rem; }`);
     }
     _createStaticElements()
     {

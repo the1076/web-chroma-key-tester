@@ -79,11 +79,11 @@ export default class RangeValue extends HTMLElement
         }
 
         let indexStyle = document.styleSheets[0];
-        indexStyle.insertRule(`local-media-selector .webcam-permission { display: none; }`);
+        // indexStyle.insertRule(`range-value input[type="range"] {  }`);
     }
     _createStaticElements()
     {
-        this.innerHTML = `<input type="range" min="${this.min}" max="${this.max}" step="${this.step}" />
+        this.innerHTML = `<input type="range" min="${this.min}" max="${this.max}" step="${this.step}" orient="vertical" />
         <input type="number" placeholder="${this.placeholder}" />`;
 
         this.$range = this.querySelector('input[type="range"]');

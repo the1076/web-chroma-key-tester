@@ -81,10 +81,10 @@ export default class MediaColorSampler extends HTMLElement
         }
 
         let indexStyle = document.styleSheets[0];
-        indexStyle.insertRule(`media-color-sampler { display: flex; }`);
-        indexStyle.insertRule(`media-color-sampler .eyedropper { display: flex; align-items:center; justify-content: center; }`);
-        indexStyle.insertRule(`media-color-sampler .eyedropper .icon { --size: 16px; width:var(--size); height:var(--size); }`);
-        indexStyle.insertRule(`media-color-sampler .color-display { --size: 24px; display: inline-block; width: var(--size); height: var(--size); border: solid 1px #333; }`);
+        indexStyle.insertRule(`media-color-sampler { display: flex; max-height: 35px; }`);
+        indexStyle.insertRule(`media-color-sampler button.eyedropper { display: flex; align-items:center; justify-content: center; margin-right: 10px; }`);
+        indexStyle.insertRule(`media-color-sampler button.eyedropper .icon { --size: 16px; width:var(--size); height:var(--size); }`);
+        indexStyle.insertRule(`media-color-sampler input[type="color"] { height: auto; margin-right: 10px; }`);
         indexStyle.insertRule(`.media-color-sampler-modal { position: fixed; top: 0; left: 0; z-index: 9999; display: flex; align-items:center; justify-content: center; width: 100vw; height: 100vh; background-color:rgba(0,0,0,.3); }`);
         indexStyle.insertRule(`.media-color-sampler-modal .window { margin: 2em; max-width: 800px; min-height: 400px; background-color:#fff; border-radius: 3px; box-shadow: 0 0 2px 5px rgba(0,0,0,.1); border: solid 1px #ddd; }`);
         indexStyle.insertRule(`.media-color-sampler-modal .stage { cursor: crosshair; }`);

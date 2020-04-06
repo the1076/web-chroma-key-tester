@@ -67,13 +67,16 @@ export default class LocalMediaSelector extends HTMLElement
     _init()
     {
         FileSelector.register();
-        MediaColorSampler.register();
 
         this.mediaType = '';
 
         this._addFunctionalStyles();
         this._createStaticElements();
         this._addEventListeners();
+
+        typeMap.image.$buttonElement = this.$imageButton;
+        typeMap.video.$buttonElement = this.$videoButton;
+        typeMap.webcam.$buttonElement = this.$webcamButton;
        
         LocalMediaSelector.instances++;
     }
@@ -86,53 +89,34 @@ export default class LocalMediaSelector extends HTMLElement
 
         let indexStyle = document.styleSheets[0];
         indexStyle.insertRule(`local-media-selector .webcam-permission { display: none; }`);
-        indexStyle.insertRule(`local-media-selector.webcam .webcam-permission { display: block; }`);
+        indexStyle.insertRule(`local-media-selector.webcam .webcam-permission { display: flex; }`);
         indexStyle.insertRule(`local-media-selector.webcam file-selector { display: none; }`);
     }
     _createStaticElements()
     {
-        this.eyedropper = (this.getAttribute('eyedropper') == 'true') ? true : false;
-        this.useDefault = (this.getAttribute('usedefault') == 'true') ? true : false;
-        this.default = this.getAttribute('default');
-        this.defaultColor = this.getAttribute('defaultcolor') || '#FFFFFF';
-
-        this.innerHTML = `<div class="default">
-                <label class="field-group">
-                    <input class="use-default" type="checkbox" />
-                    <div class="title">Use Default?</div>
-                </label>
-                <img class="default-media" src="" />
-            </div>
-            <ul class="types">
-                <li class="type image"><button data-type="image">Image</button></li>
-                <li class="type video"><button data-type="video">Video</button></li>
-                <li class="type webcam"><button data-type="webcam">Webcam</button></li>
+        this.innerHTML = `<ul class="types">
+                <li class="type image" data-type="image">Image</li>
+                <li class="type video" data-type="video">Video</li>
+                <li class="type webcam" data-type="webcam">Webcam</li>
             </ul>
-            <file-selector></file-selector>
-            <div class="webcam-permission">
-                <p>In order to use your webcam as a video feed, you'll need to grant this page permission. Click the "Request Webcam Permission" button, below, and then choose "Allow" on the browser popup.</p>
-                <p>Make sure that your webcam is not already in use by some other application or tab</p>
-                <button class="request">Request Webcam Permission</button>
+            <div class="content">
+                <file-selector></file-selector>
+                <div class="webcam-permission">
+                    <p>In order to use your webcam as a video feed, you'll need to grant this page permission. Click the "Request Webcam Permission" button, below, and then choose "Allow" on the browser popup.</p>
+                    <p>Make sure that your webcam is not already in use by some other application or tab</p>
+                    <button class="request">Request Webcam Permission</button>
+                </div>
+                ${(this.eyedropper == true) ? `<media-color-sampler></media-color-sampler>` : ''}
             </div>
-            ${(this.eyedropper == true) ? `<media-color-sampler></media-color-sampler>` : ''}
         </div>`;
 
-        this.$useDefault = this.querySelector('.use-default');
-        this.$defaultMedia = this.querySelector('.default-media');
-        this.$imageButton = this.querySelector('.type.image > button');
-        this.$videoButton = this.querySelector('.type.video > button');
-        this.$webcamButton = this.querySelector('.type.webcam > button');
+        this.$imageButton = this.querySelector('.type.image');
+        this.$videoButton = this.querySelector('.type.video');
+        this.$webcamButton = this.querySelector('.type.webcam');
         this.$fileSelector = this.querySelector('file-selector');
 
         this.$webcamPreview = document.createElement('video');
-
-        if(this.eyedropper)
-        {
-            this.$colorSampler = document.querySelector('media-color-sampler');
-        }
-
         
-        this.setDefaultUse(this.useDefault);
         let mediaType = this.getAttribute('mediatype');
         if(mediaType != null)
         {
@@ -141,35 +125,18 @@ export default class LocalMediaSelector extends HTMLElement
     }
     _addEventListeners()
     {
-        this.$useDefault.addEventListener('change', this._useDefault_onChange.bind(this));
         this.$imageButton.addEventListener('click', this._typeButton_onClick.bind(this));
         this.$videoButton.addEventListener('click', this._typeButton_onClick.bind(this));
         this.$webcamButton.addEventListener('click', this._typeButton_onClick.bind(this));
 
         this.$fileSelector.addEventListener('previewload', this._fileSelector_OnPreviewLoad.bind(this));
         this.$fileSelector.addEventListener('previewclear', this._fileSelector_OnPreviewClear.bind(this));
-
-        if(this.$colorSampler)
-        {
-            this.$colorSampler.addEventListener('colorchange', this._eyedropper_onColorChange.bind(this));
-        }
     }
 
     // handlers
-    _useDefault_onChange(event)
-    {
-        this.useDefault = this.$useDefault.checked;
-        this.setDefaultUse(this.useDefault);
-    }
-
     _typeButton_onClick(event)
     {
         this.setMediaType(event.currentTarget.dataset.type);
-    }
-    
-    _eyedropper_onColorChange(event)
-    {
-        this.__classOverrride_dispatchEvent(this, 'colorchange', event.detail);
     }
 
     _fileSelector_OnPreviewLoad(event)
@@ -177,11 +144,6 @@ export default class LocalMediaSelector extends HTMLElement
         this.value = this.$fileSelector.$input.files[0];
         let parentObject = (this.mediaType == 'webcam') ? this : this.$fileSelector;
         this.$value = parentObject[typeMap[this.mediaType].target];
-        
-        if(this.eyedropper)
-        {
-            this.$colorSampler.setSource(parentObject[typeMap[this.mediaType].target]);
-        }
 
         this.__classOverrride_dispatchEvent(this, 'sourcechange', { value: this.value, $value: this.$value });
     }
@@ -196,6 +158,21 @@ export default class LocalMediaSelector extends HTMLElement
         this.$fileSelector.clearSelection();
 
         this.mediaType = mediaType;
+
+        for(let property in typeMap)
+        {
+            if(typeMap.hasOwnProperty(property))
+            {
+                if(property == this.mediaType)
+                {
+                    this['$' + property + 'Button'].classList.add('selected');
+                }
+                else
+                {
+                    this['$' + property + 'Button'].classList.remove('selected');
+                }
+            }
+        }
         if(this.mediaType == 'webcam')
         {
             this.classList.add('webcam');
@@ -209,31 +186,12 @@ export default class LocalMediaSelector extends HTMLElement
             this.$fileSelector.setAttribute('cleartext', typeMap[mediaType].cleartext);
         }
     }
-
-    setDefaultUse(useDefault)
+    setMediaAsElement($element)
     {
-        if(useDefault)
-        {
-            this.classList.add('default');
-            this.$defaultMedia.src = this.default;
-            this.value = this.default;
-            this.$value = this.$defaultMedia;
-            
-            if(this.eyedropper)
-            {
-                this.$colorSampler.setColor(this.defaultColor);
-            }
-        }
-        else
-        {
-            this.classList.remove('default');
-            if(this.mediaType != null && this.mediaType.trim() != '')
-            {
-                let parentObject = (this.mediaType == 'webcam') ? this : this.$fileSelector;
-                this.$value = parentObject[typeMap[this.mediaType].target];
-            }
-            this.value = this.default;
-            this.$defaultMedia.src = null;
-        }
+        if($element.tagName.toUpperCase() == 'IMG') { this.setMediaType('image'); }
+        else if($element.tagName.toUpperCase() == 'VIDEO') { this.setMediaType('video'); }
+        else { console.error("Must set media as an image or video element."); }
+        this.value = $element;
+        this.$value = $element;
     }
 }
