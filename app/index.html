@@ -85,12 +85,36 @@
                         <p>Select an input image or video, a replacement image or video, and a key color (the color to be replaced), or use the provided defaults.</p>
                     </header>
                     <div class="source-selector input">
-                        <div class="title"><span class="text">Input Media</span><label class="use-default"><input type="checkbox" /><span class="description">Use Default?</span></label></div>
-                        <local-media-selector eyedropper="true" default="./assets/images/test.jpg"></local-media-selector>
+                        <div class="title">
+                            <div class="segment">
+                                <span class="text">Input Media</span>
+                                <label class="use-default">
+                                    <input type="checkbox" data-source="input" /><span class="description">Use Default?</span>
+                                </label>
+                            </div>
+                            <div class="key">
+                                <span class="label">Key Color: </span>
+                                <media-color-sampler></media-color-sampler>
+                            </div>
+                        </div>
+                        <local-media-selector></local-media-selector>
+                        <div class="default">
+                            <video class="media"></video>
+                        </div>
                     </div>
                     <div class="source-selector replacement">
-                        <div class="title"><span class="text"></span>Replacement Media</span><label class="use-default"><input type="checkbox" /><span class="description">Use Default?</span></label></div>
-                        <local-media-selector default="./assets/images/test.jpg"></local-media-selector>
+                        <div class="title">
+                            <div class="segment">
+                                <span class="text">Replacement Media</span>
+                                <label class="use-default">
+                                    <input type="checkbox" data-source="replacement" /><span class="description">Use Default?</span>
+                                </label>
+                            </div>
+                        </div>
+                        <local-media-selector></local-media-selector>
+                        <div class="default">
+                            <video class="media"></video>
+                        </div>
                     </div>
                 </div>
                 <div class="display">

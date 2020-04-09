@@ -26,6 +26,29 @@ export default class MediaColorSampler extends HTMLElement
     __classOverrride_dispatchEvent($target, eventName, data) { if($target == this) { let customEvent = (data) ? new CustomEvent(eventName, { detail: data }) : new CustomEvent(eventName); this.dispatchEvent(customEvent); } Common.dispatchEventToAttributeHandlers($target, eventName, data); }
     
     // component definition
+    get disabled()
+    {
+        return this._disabled;
+    }
+    set disabled(value)
+    {
+        if(!this.__isConnected)
+        {
+            return;
+        }
+        this._disabled = (value === true) ? true : false;
+        if(value === true)
+        {
+            this.$hex.setAttribute('readonly', 'true');
+            this.$color.setAttribute('disabled', 'disabled');
+        }
+        else
+        {
+            this.$hex.removeAttribute('readonly');
+            this.$color.removeAttribute('disabled');
+        }
+    }
+
     constructor($source, attributes)
     {
         super();
@@ -160,6 +183,7 @@ export default class MediaColorSampler extends HTMLElement
     _addEventListeners()
     {
         this.$hex.addEventListener('paste', this._hex_onPaste.bind(this));
+        this.$hex.addEventListener('change', this._hex_onChange.bind(this));
         this.$eyedropperButton.addEventListener('click', this._eyedropper_onClick.bind(this));
         this.$color.addEventListener('change', this._color_onChange.bind(this));
         this.$playToggle.addEventListener('click', this._playToggle_onClick.bind(this));
@@ -176,6 +200,20 @@ export default class MediaColorSampler extends HTMLElement
         this.$hex.value = paste;
 
         event.preventDefault();
+    }
+    _hex_onChange(event)
+    {
+        let $input = event.currentTarget;
+        if($input.value.length > 6)
+        {
+            $input.value = $input.value.substring(0, 6);
+        }
+
+        let test = /^[0-9A-Fa-f]{6}$/g;
+        if(test.test($input.value))
+        {
+            this.setColor('#' + $input.value);
+        }
     }
 
     async _eyedropper_onClick(event)
